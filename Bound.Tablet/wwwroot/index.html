@@ -2,73 +2,193 @@
 <html>
 <head>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <title>Bound Tablet</title>   
+    <title>Bound Tablet</title>
+    <style>
+        body {
+            background-image: url('images/Bound1.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            overflow: hidden;
+        }
+
+        #textBox {
+            margin: -40px;
+        }
+
+        .jumbotron {
+            margin-top: 100px;
+            min-width: 100px;
+            height: 80vh;
+            display: flow text-align: center;
+            background-color: rgba(0, 0, 0, 0.9); /* Add opacity here */
+            color: #FF5733; /* Change the text color here */
+        }
+
+        table {
+            font-size: 50px;
+        }
+
+        #circleId {
+            color: yellow;
+        }
+
+        .myGreenDot {
+            background: rgb(0, 255, 0);
+            border-radius: 50%;
+            display: inline-block;
+            height: 20px;
+            margin-left: 4px;
+            margin-right: 4px;
+            width: 20px;
+        }
+
+        .myRedDot {
+            background: rgb(255, 0, 0);
+            border-radius: 50%;
+            display: inline-block;
+            height: 20px;
+            margin-left: 4px;
+            margin-right: 4px;
+            width: 20px;
+        }
+
+        box {
+            background-color: red;
+        }
+    </style>
 </head>
 <body>
-
     <div class="container">
         <div class="jumbotron">
-            <h1 id="idName" class="display-4"></h1>
-            <h3 id="idMachineName"></h3>
-            <h3 id="idReps"></h3>
-            <h3 id="idName""></h3>
-            <h3 id="idText"></h3>
+            <h1 id="idTitle">Welcome to Bound Technologies</h1>
+            <table border="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Logged in:</th>
+                        <th>
+                            <span id="idStatusCircle"></span>
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr>
+                        <td>Machine:</td>
+                        <td id="idMachineName"></td>
+                    </tr>
+                    <tr>
+                        <td>Name:</td>
+                        <td id="idName"></td>
+                    </tr>
+                    <tr id="repsId">
+                        <td>Total reps:</td>
+                        <td id="idTotalReps"></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
     <script type="text/javascript" src="lib/signalr.min.js"></script>
     <script type="text/javascript">
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/myHub") // The URL of your hub in the API
+            .build();
+
+        connection.start()
+            .then(function () {
+                console.log("SignalR connected");
+            })
+            .catch(function (err) {
+                console.error(err.toString());
+            });
+
+        connection.on("ReceiveData", function (data) {
+            // Handle the received data from the server.
+            console.log("Received data: " + data);
+        });
+
+        //// Send data to the specific user (provide their userId)
+        //function sendDataToUser(userId, message) {
+        //    connection.invoke("SendDataToUser", userId, message)
+        //        .catch(function (err) {
+        //            console.error(err.toString());
+        //        });
+        //}
+
+        // Example of sending data to a specific user
+        //sendDataToUser("userId123", "Hello, this is a message for you!");
+
+
         document.addEventListener('DOMContentLoaded', function () {
+           // document.getElementById("idStatusCircle").className = "myRedDot";
 
             var name = "Tablet";
 
             var connection = new signalR.HubConnectionBuilder()
-                .withUrl('/chat')
+                .withUrl('/myHub')
                 .build();
             connection.on('broadcastMessage', function (name, message) {
 
                 var parts = message.split(",");
 
                 var name = parts[0];
-                var text = parts[1];
-                var reps = parts[2];
-                var machineName = parts[3];
+                var reps = parts[1];
+                var machineName = parts[2];
+                var status = parts[3];
 
                 console.log(parts)
+
+                if (status == "online") {
+                    console.log(status);
+                    document.getElementById("idStatusCircle").className = "myGreenDot";
+                    var idTextElement = document.getElementById('idStatus');
+                    //idTextElement.textContent = "online";
+                }
+                else {
+                    console.log(status);
+                    document.getElementById("idStatusCircle").className = "myRedDot";
+                    var idTextElement = document.getElementById('idStatus');
+                    //idTextElement.textContent = "offline";
+                }
+
 
                 var idNameElement = document.getElementById('idName');
                 idNameElement.textContent = name;
 
-                var idRepsElement = document.getElementById('idReps');
+
+                var idRepsElement = document.getElementById('idTotalReps');
                 idRepsElement.textContent = reps;
 
                 var idMachineNameElement = document.getElementById('idMachineName');
                 idMachineNameElement.textContent = machineName;
 
-                var idTextElement = document.getElementById('idText');
-                idTextElement.textContent = text;
+
+
+
+
+                //document.getElementById("idStatus").classList.add("myGreenDot");
+
+
+
+
             });
 
             connection.start()
                 .then(function () {
                     console.log('connection started');
-                    //document.getElementById('sendmessage').addEventListener('click', function (event) {
-                    //    // Call the Send method on the hub.
-                    //    connection.invoke('send', name, messageInput.value);
-
-                    //    // Clear text box and reset focus for next comment.
-                    //    messageInput.value = '';
-                    //    messageInput.focus();
-                    //    event.preventDefault();
-                    //});
                 })
                 .catch(error => {
                     console.error(error.message);
                 });
         });
+
     </script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

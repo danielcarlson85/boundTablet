@@ -17,9 +17,14 @@ namespace Bound.Tablet
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSignalR();
+            services.AddScoped<ChatHub>(); // Register your custom service
+
+            services.AddTransient<ChatHub>();
+
+
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ChatHub chatHub)
         {
             if (env.IsDevelopment())
             {
@@ -29,24 +34,26 @@ namespace Bound.Tablet
             app.UseFileServer();
 
             app.UseRouting();
+            app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<ChatHub>("/chat");
+                endpoints.MapHub<ChatHub>("/myHub");
                 endpoints.MapGet("/send", async context =>
                 {
                     var hubContext = context.RequestServices.GetRequiredService<IHubContext<ChatHub>>();
 
                     var name = context.Request.Query["name"];
-                    var text = context.Request.Query["text"];
                     var reps = context.Request.Query["reps"];
+                    var status = context.Request.Query["status"];
                     var machineName = context.Request.Query["machinename"];
 
-                    await hubContext.Clients.All.SendAsync("broadcastMessage", "Tablet", $"{name},{text},{reps},{machineName}");
+                    await hubContext.Clients.All.SendAsync("broadcastMessage", "Tablet", $"{name},{reps},{machineName},{status}");
                     await context.Response.WriteAsync("Data sent via HTTP.");
                 });
 
             });
         }
+
     }
 }
