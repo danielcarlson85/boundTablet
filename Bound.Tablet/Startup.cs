@@ -10,7 +10,7 @@ namespace Bound.Tablet
 {
 
 
-    // To Run: make a call to:   [GET] "http://localhost:5000/send?text=Detta%20%C3%A4r%20textdfsdff&name=Dandffdfiel%20Carlsdff&machinename=ChestMachine&reps=45sdff"
+    // To Run: make a call to:   [GET] ""
 
     public class Startup
     {
@@ -24,7 +24,9 @@ namespace Bound.Tablet
 
         }
 
-        //https://localhost:5001/send?name=Daniel%20Carlson%20H%C3%B6rnlund&weight=333&reps=35&machinename=ChestMachine&status=online
+        //https://boundhub.azurewebsites.net/send?name=Daniel%20Carlson%20H%C3%B6rnlund&weight=333&reps=35&machinename=ChestMachine&status=online
+
+        //http://localhost:5000/send?text=Detta%20%C3%A4r%20textdfsdff&name=Dandffdfiel%20Carlsdff&machinename=ChestMachine&reps=45sdff
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ChatHub chatHub)
         {
