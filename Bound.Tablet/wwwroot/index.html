@@ -88,9 +88,13 @@
                         <td>Name:</td>
                         <td id="idName"></td>
                     </tr>
-                    <tr id="repsId">
+                    <tr>
                         <td>Total reps:</td>
                         <td id="idTotalReps"></td>
+                    </tr> 
+                    <tr>
+                        <td>Current weight:</td>
+                        <td id="idCurrentWeight"></td>
                     </tr>
                 </tbody>
             </table>
@@ -144,6 +148,7 @@
                 var reps = parts[1];
                 var machineName = parts[2];
                 var status = parts[3];
+                var weight = parts[4]
 
                 console.log(parts)
 
@@ -170,6 +175,9 @@
 
                 var idMachineNameElement = document.getElementById('idMachineName');
                 idMachineNameElement.textContent = machineName;
+
+                var idweightElement = document.getElementById('idCurrentWeight');
+                idweightElement.textContent = weight;
 
 
 

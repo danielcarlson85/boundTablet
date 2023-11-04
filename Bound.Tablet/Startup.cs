@@ -24,6 +24,8 @@ namespace Bound.Tablet
 
         }
 
+        //https://localhost:5001/send?name=Daniel%20Carlson%20H%C3%B6rnlund&weight=333&reps=35&machinename=ChestMachine&status=online
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ChatHub chatHub)
         {
             if (env.IsDevelopment())
@@ -47,8 +49,9 @@ namespace Bound.Tablet
                     var reps = context.Request.Query["reps"];
                     var status = context.Request.Query["status"];
                     var machineName = context.Request.Query["machinename"];
+                    var weight = context.Request.Query["weight"];
 
-                    await hubContext.Clients.All.SendAsync("broadcastMessage", "Tablet", $"{name},{reps},{machineName},{status}");
+                    await hubContext.Clients.All.SendAsync("broadcastMessage", "Tablet", $"{name},{reps},{machineName},{status},{weight}");
                     await context.Response.WriteAsync("Data sent via HTTP.");
                 });
 
