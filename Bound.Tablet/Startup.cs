@@ -52,8 +52,9 @@ namespace Bound.Tablet
                     var status = context.Request.Query["status"];
                     var machineName = context.Request.Query["machinename"];
                     var weight = context.Request.Query["weight"];
+                    var debugText = context.Request.Query["debugText"];
 
-                    await hubContext.Clients.All.SendAsync("broadcastMessage", "Tablet", $"{name},{reps},{machineName},{status},{weight}");
+                    await hubContext.Clients.All.SendAsync("broadcastMessage", "Tablet", $"{name},{reps},{machineName},{status},{weight},{debugText}");
                     await context.Response.WriteAsync("Data sent via HTTP.");
                 });
 

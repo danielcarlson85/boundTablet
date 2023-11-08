@@ -35,8 +35,14 @@
             font-size: 30px;
         }
 
+        
+
         #circleId {
             color: yellow;
+        }
+
+        #idDebugTextElement{
+            font-size:smaller;
         }
 
         .myGreenDot {
@@ -96,6 +102,11 @@
                         <td>Current weight:</td>
                         <td id="idCurrentWeight"></td>
                     </tr>
+                    
+                    <tr>
+                        <td>Debug details:</td>
+                        <td id="idDebugTextElement"></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -149,6 +160,7 @@
                 var machineName = parts[2];
                 var status = parts[3];
                 var weight = parts[4]
+                var debugText = parts[5]
 
                 console.log(parts)
 
@@ -179,7 +191,8 @@
                 var idweightElement = document.getElementById('idCurrentWeight');
                 idweightElement.textContent = weight;
 
-
+                var idDebugTextElement = document.getElementById('idDebugTextElement');
+                idDebugTextElement.textContent = debugText;
 
 
 
