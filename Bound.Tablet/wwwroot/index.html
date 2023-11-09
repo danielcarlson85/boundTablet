@@ -13,7 +13,7 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color:black;
+            background-color: black;
         }
 
 
@@ -35,14 +35,14 @@
             font-size: 30px;
         }
 
-        
+
 
         #circleId {
             color: yellow;
         }
 
-        #idDebugTextElement{
-            font-size:smaller;
+        #idDebugTextElement {
+            font-size: smaller;
         }
 
         .myGreenDot {
@@ -97,15 +97,15 @@
                     <tr>
                         <td>Total reps:</td>
                         <td id="idTotalReps"></td>
-                    </tr> 
+                    </tr>
                     <tr>
                         <td>Current weight:</td>
                         <td id="idCurrentWeight"></td>
                     </tr>
-                    
+
                     <tr>
-                        <td>Debug details:</td>
-                        <td id="idDebugTextElement"></td>
+                        <td id="idDebugTextElementTitle"></td>
+                        <td id="idDebugTextElementText"></td>
                     </tr>
                 </tbody>
             </table>
@@ -114,6 +114,34 @@
 
     <script type="text/javascript" src="lib/signalr.min.js"></script>
     <script type="text/javascript">
+
+
+
+
+
+
+
+
+
+
+        const isDebug = true;
+
+
+
+
+
+
+
+
+
+
+        if (isDebug) {
+            var idDebugTextElementTitle = document.getElementById('idDebugTextElementTitle');
+            idDebugTextElementTitle.textContent = "Debug Text:";
+        }
+
+        console.log(isDebug)
+
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("/myHub") // The URL of your hub in the API
             .build();
@@ -131,23 +159,7 @@
             console.log("Received data: " + data);
         });
 
-        //// Send data to the specific user (provide their userId)
-        //function sendDataToUser(userId, message) {
-        //    connection.invoke("SendDataToUser", userId, message)
-        //        .catch(function (err) {
-        //            console.error(err.toString());
-        //        });
-        //}
-
-        // Example of sending data to a specific user
-        //sendDataToUser("userId123", "Hello, this is a message for you!");
-
-
         document.addEventListener('DOMContentLoaded', function () {
-           // document.getElementById("idStatusCircle").className = "myRedDot";
-
-            var name = "Tablet";
-
             var connection = new signalR.HubConnectionBuilder()
                 .withUrl('/myHub')
                 .build();
@@ -162,19 +174,12 @@
                 var weight = parts[4]
                 var debugText = parts[5]
 
-                //console.log(parts)
 
                 if (status == "online") {
-                    //console.log(status);
                     document.getElementById("idStatusCircle").className = "myGreenDot";
-                    var idTextElement = document.getElementById('idStatus');
-                    //idTextElement.textContent = "online";
                 }
                 else {
-                    //console.log(status);
                     document.getElementById("idStatusCircle").className = "myRedDot";
-                    var idTextElement = document.getElementById('idStatus');
-                    //idTextElement.textContent = "offline";
                 }
 
 
@@ -191,16 +196,13 @@
                 var idweightElement = document.getElementById('idCurrentWeight');
                 idweightElement.textContent = weight;
 
-                var idDebugTextElement = document.getElementById('idDebugTextElement');
-                idDebugTextElement.textContent = debugText;
 
-                console.log(debugText);
+                if (isDebug) {
+                    var idDebugTextElementText = document.getElementById('idDebugTextElementText');
+                    idDebugTextElementText.textContent = debugText;
 
-                //document.getElementById("idStatus").classList.add("myGreenDot");
-
-
-
-
+                    console.log(debugText);
+                }
             });
 
             connection.start()
