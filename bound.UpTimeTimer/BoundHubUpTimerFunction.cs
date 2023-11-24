@@ -9,7 +9,7 @@ namespace bound.UpTimeTimer
     public class BoundHubUpTimerFunction
     {
         [FunctionName("BoundHubUpTimerFunction")]
-        public async Task RunAsync([TimerTrigger("0 */15 * * * *", RunOnStartup = true)] TimerInfo myTimer, ILogger log)
+        public async Task RunAsync([TimerTrigger("0 */5 * * * *", RunOnStartup = true)] TimerInfo myTimer, ILogger log)
         {
             var HttpClient = new HttpClient();
             var result = await HttpClient.GetStringAsync("https://boundhub.azurewebsites.net/send?name=Daniel&machinename=Chestmachine&status=ofsdf&reps=10&weight=10&DebugText=debug");
